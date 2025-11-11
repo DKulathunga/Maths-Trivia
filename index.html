@@ -3,177 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Master: Multiplayer Trivia Challenge</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <title>Fruit Math Trivia Challenge</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Authentication Section -->
-        <div id="auth-section" class="section active">
-            <div class="auth-container">
-                <h1>🎯 Quiz Master</h1>
-                <div class="auth-form">
-                    <h2>Welcome Back!</h2>
-                    <input type="text" id="username" placeholder="Enter your username" maxlength="20">
-                    <button id="login-btn">Start Playing</button>
-                    <div class="guest-notice">No password required - just pick a username!</div>
-                </div>
+        <form action="login.php" method="post">
+            <div class="">
+                <input type="email" placeholder="Enter Email: " name="email">
             </div>
-        </div>
+            <div class="">
+                <input type="password" placeholder="Enter Password: " name="password">
+            </div>
+            <div class="">
+                <input type="submit" value="Login" name="login">
+            </div>
+        </form>
 
-        <!-- Game Setup Section -->
-        <div id="setup-section" class="section">
-            <div class="setup-container">
-                <h2>Game Settings</h2>
-                <div class="preference-grid">
-                    <div class="preference-card">
-                        <h3>🎮 Game Mode</h3>
-                        <select id="game-mode">
-                            <option value="timed">Timed Challenge (60s)</option>
-                            <option value="survival">Survival Mode</option>
-                            <option value="practice">Practice Mode</option>
-                        </select>
-                    </div>
-                    
-                    <div class="preference-card">
-                        <h3>📚 Question Source</h3>
-                        <select id="api-source">
-                            <option value="both">Both APIs (Mixed)</option>
-                            <option value="tomato">Tomato API (Math Problems)</option>
-                            <option value="banana">Banana API (Visual Puzzles)</option>
-                            <option value="fallback">Built-in Questions</option>
-                        </select>
-                    </div>
-                    
-                    <div class="preference-card">
-                        <h3>🎯 Difficulty</h3>
-                        <select id="difficulty">
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
-                    </div>
-                    
-                    <div class="preference-card">
-                        <h3>🔢 Question Count</h3>
-                        <input type="range" id="question-count" min="5" max="20" value="10">
-                        <span id="count-display">10 questions</span>
-                    </div>
-                </div>
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="login-form">
+                <h1>🍎 Fruit Math Trivia</h1>
+                <input type="text" id="username" placeholder="Enter your username" maxlength="20">
                 
-                <!-- API Status Display -->
-                <div class="api-status">
-                    <h3>API Status</h3>
-                    <div class="status-grid">
-                        <div class="status-item">
-                            <span class="status-label">Tomato API:</span>
-                            <span id="tomato-status" class="status offline">Checking...</span>
+                <div class="fruit-selection">
+                    <h3>Choose Your Favorite Fruit Theme</h3>
+                    <div class="fruits-grid">
+                        <div class="fruit-option" data-fruit="tomato">
+                            <span>🍅</span>
+                            <span>Tomato</span>
                         </div>
-                        <div class="status-item">
-                            <span class="status-label">Banana API:</span>
-                            <span id="banana-status" class="status offline">Checking...</span>
+                        <div class="fruit-option" data-fruit="banana">
+                            <span>🍌</span>
+                            <span>Banana</span>
+                        </div>
+                        <div class="fruit-option" data-fruit="apple">
+                            <span>🍎</span>
+                            <span>Apple</span>
+                        </div>
+                        <div class="fruit-option" data-fruit="orange">
+                            <span>🍊</span>
+                            <span>Orange</span>
                         </div>
                     </div>
                 </div>
                 
-                <button id="start-game-btn" class="btn-primary">Start Game</button>
+                <button id="startGame">Start Game</button>
             </div>
         </div>
 
-        <!-- Game Section -->
-        <div id="game-section" class="section">
-            <div class="game-header">
-                <div class="player-info">
-                    <span id="current-player">Player</span>
-                    <div class="score">Score: <span id="current-score">0</span></div>
-                    <div class="api-source">Source: <span id="current-api">-</span></div>
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="header">
+                <div class="user-info">
+                    <span id="currentUser">User</span>
+                    <span id="currentFruit">🍅 Tomato Theme</span>
+                    <span id="score">Score: 0</span>
                 </div>
-                <div class="game-stats">
-                    <div class="timer" id="timer">60s</div>
-                    <div class="question-counter">
-                        <span id="current-q">1</span>/<span id="total-qs">10</span>
-                    </div>
+                <div class="header-controls">
+                    <button id="changeFruit" class="change-fruit-btn">Change Fruit</button>
+                    <div class="timer" id="timer">30</div>
                 </div>
             </div>
 
             <div class="question-container">
-                <div class="question-card">
-                    <!-- Visual Question Container -->
-                    <div id="visual-question" class="visual-container" style="display: none;">
-                        <img id="question-image" src="" alt="Visual puzzle">
-                        <div class="image-caption">Solve the visual puzzle above</div>
-                    </div>
-                    
-                    <!-- Text Question Container -->
-                    <div id="text-question">
-                        <h3 id="question-text">Loading question...</h3>
-                    </div>
-                    
-                    <div id="options-container" class="options-grid">
-                        <!-- Options will be populated dynamically -->
-                    </div>
+                <div class="fruit-header">
+                    <span id="fruitEmoji">🍅</span>
+                    <h3 id="fruitTitle">Tomato Math Challenge</h3>
                 </div>
+                <div id="questionImage"></div>
+                <div class="options" id="options"></div>
             </div>
 
-            <div class="game-controls">
-                <button id="next-btn" class="btn-secondary" disabled>Next Question</button>
-                <button id="quit-btn" class="btn-danger">Quit Game</button>
+            <div class="controls">
+                <button id="nextQuestion" style="display:none;">Next Question</button>
+                <button id="endGame">End Game</button>
             </div>
         </div>
 
-        <!-- Results Section -->
-        <div id="results-section" class="section">
-            <div class="results-container">
-                <h2>Game Results</h2>
-                <div class="score-card">
-                    <div class="final-score" id="final-score">0</div>
-                    <div class="score-label">Total Score</div>
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <div class="results">
+                <div class="fruit-result-header">
+                    <span id="resultFruitEmoji">🍅</span>
+                    <h2>Game Results</h2>
+                </div>
+                <div id="finalScore">Score: 0</div>
+                <div id="questionsAttempted">Questions: 0</div>
+                <div id="correctAnswers">Correct: 0</div>
+                <div class="accuracy" id="accuracy">Accuracy: 0%</div>
+                
+                <div class="leaderboard">
+                    <h3>Your Progress with <span id="statsFruit">Tomato</span></h3>
+                    <div id="userStats"></div>
                 </div>
                 
-                <div class="api-stats">
-                    <h3>API Usage</h3>
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <span class="stat-value" id="tomato-questions">0</span>
-                            <span class="stat-label">Tomato Qs</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value" id="banana-questions">0</span>
-                            <span class="stat-label">Banana Qs</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value" id="fallback-questions">0</span>
-                            <span class="stat-label">Fallback Qs</span>
-                        </div>
-                    </div>
+                <div class="result-actions">
+                    <button id="playAgain">Play Again</button>
+                    <button id="exitToMainMenu">Exit to Main Menu</button>
                 </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-value" id="correct-answers">0</span>
-                        <span class="stat-label">Correct</span>
+            </div>
+        </div>
+
+        <!-- Fruit Selection Modal -->
+        <div id="fruitModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Choose Your Fruit Theme</h3>
+                <div class="fruits-grid-modal">
+                    <div class="fruit-option-modal" data-fruit="tomato">
+                        <span class="fruit-emoji">🍅</span>
+                        <span class="fruit-name">Tomato</span>
+                        <span class="fruit-desc">Red & Juicy Math</span>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-value" id="total-questions">0</span>
-                        <span class="stat-label">Total</span>
+                    <div class="fruit-option-modal" data-fruit="banana">
+                        <span class="fruit-emoji">🍌</span>
+                        <span class="fruit-name">Banana</span>
+                        <span class="fruit-desc">Yellow & Curvy Puzzles</span>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-value" id="accuracy">0%</span>
-                        <span class="stat-label">Accuracy</span>
+                    <div class="fruit-option-modal" data-fruit="apple">
+                        <span class="fruit-emoji">🍎</span>
+                        <span class="fruit-name">Apple</span>
+                        <span class="fruit-desc">Crispy & Fresh Problems</span>
                     </div>
-                </div>
-                <div class="results-actions">
-                    <button id="play-again-btn" class="btn-primary">Play Again</button>
-                    <button id="new-settings-btn" class="btn-secondary">Change Settings</button>
+                    <div class="fruit-option-modal" data-fruit="orange">
+                        <span class="fruit-emoji">🍊</span>
+                        <span class="fruit-name">Orange</span>
+                        <span class="fruit-desc">Citrus Math Fun</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="scripts/auth.js"></script>
-    <script src="scripts/api.js"></script>
-    <script src="scripts/ui.js"></script>
-    <script src="scripts/game.js"></script>
-    <script src="scripts/app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
