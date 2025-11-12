@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: login.html");
+    exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,20 +16,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
     <div class="container">
-        <form action="login.php" method="post">
-            <div class="">
-                <input type="email" placeholder="Enter Email: " name="email">
-            </div>
-            <div class="">
-                <input type="password" placeholder="Enter Password: " name="password">
-            </div>
-            <div class="">
-                <input type="submit" value="Login" name="login">
-            </div>
-        </form>
-
-        
+       
+    <form action="logout.php" method="post" style="text-align: right; margin: 10px;">
+        <button type="submit" style="padding:8px 15px; background-color:#ff4d4d; color:white; border:none; border-radius:5px; cursor:pointer;">
+        Quit Game
+        </button>
+    </form>
 
         <!-- Login Screen -->
         <div id="loginScreen" class="screen active">
