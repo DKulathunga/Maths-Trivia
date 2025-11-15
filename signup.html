@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🍎 Login | Fruit Math Trivia</title>
+  <title>🍉 Register | Fruit Math Trivia</title>
   <link rel="stylesheet" href="style.css">
   <style>
     body {
-      background: linear-gradient(135deg, #fff3cd 0%, #ffe6e6 100%), url('fruit-bg.jpg');
+      background: linear-gradient(135deg, #ffe8e8 0%, #fffbd5 100%), url('fruit-bg.jpg');
       background-size: cover;
       background-blend-mode: overlay;
       min-height: 100vh;
@@ -16,10 +16,10 @@
       align-items: center;
     }
 
-    .login-box {
-      background: rgba(255, 255, 255, 0.92);
+    .signup-box {
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       padding: 40px;
       width: 380px;
       text-align: center;
@@ -32,11 +32,6 @@
       margin-bottom: 15px;
     }
 
-    .emoji {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-
     input[type="text"],
     input[type="password"] {
       width: 100%;
@@ -46,12 +41,6 @@
       margin-bottom: 15px;
       font-size: 1rem;
       outline: none;
-      transition: all 0.3s ease;
-    }
-
-    input:focus {
-      border-color: #ff6b6b;
-      box-shadow: 0 0 6px rgba(255, 107, 107, 0.4);
     }
 
     button {
@@ -85,42 +74,17 @@
     a:hover {
       text-decoration: underline;
     }
-
-    /* Animation */
-    @keyframes bounceIn {
-      0% {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-      60% {
-        transform: scale(1.05);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    .login-box {
-      animation: bounceIn 0.8s ease;
-    }
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <div class="emoji">🍇🍊🍎🍌</div>
-    <h2>Welcome Back to Fruit Math Trivia!</h2>
-    <form action="php/login.php" method="post">
-      <label>Email:</label>
-      <input type="text" name="username" required><br><br>
-
-      <label>Password:</label>
-      <input type="password" name="password" required><br><br>
-
-      <button type="submit">Login</button>
+  <div class="signup-box">
+    <h2>🍓 Join Fruit Math Trivia!</h2>
+    <form action="signup.php" method="POST">
+      <input type="text" name="username" placeholder="Enter username" required>
+      <input type="password" name="password" placeholder="Create password" required>
+      <button type="submit">Register</button>
     </form>
-
-    <p>Don’t have an account? <a href="signup.html">Create one</a></p>
+    <p>Already have an account? <a href="signup.html">Login</a></p>
   </div>
 </body>
 </html>

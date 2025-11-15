@@ -13,15 +13,15 @@ if (!isset($_SESSION['username'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fruit Math Trivia Challenge</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
+    <!-- <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1> -->
     <div class="container">
        
-    <form action="logout.php" method="post" style="text-align: right; margin: 10px;">
-        <button type="submit" style="padding:8px 15px; background-color:#ff4d4d; color:white; border:none; border-radius:5px; cursor:pointer;">
-        Quit Game
+    <form action="php/logout.php" method="post" style="text-align: right; margin: 10px;">
+        <button type="submit" class="quit">
+            Quit Game
         </button>
     </form>
 
@@ -141,6 +141,6 @@ if (!isset($_SESSION['username'])) {
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="js/game.js"></script>
 </body>
 </html>

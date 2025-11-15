@@ -240,6 +240,7 @@ class AdvancedMathTriviaGame {
             this.gameActive = false;
             this.stopTimer();
             this.saveGameData();
+            this.saveScoreToDB();
             this.showResults();
 
             // // ✅ delay redirect to show results for 2 seconds
@@ -250,6 +251,27 @@ class AdvancedMathTriviaGame {
             console.error('Error ending game:', e);
         }
     }
+        saveScoreToDB() {
+    fetch('php/save_score.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            score: this.score,
+            questions_attempted: this.questionsAttempted,
+            correct_answers: this.correctAnswers,
+            fruit: this.selectedFruit
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === 'success'){
+            console.log('Score saved to database!');
+        } else {
+            console.error('Error saving score:', data.message);
+        }
+    })
+    .catch(err => console.error('Error:', err));
+}
 
     exitTOMainMenu() {
         window.location.href = 'index.php'; 
