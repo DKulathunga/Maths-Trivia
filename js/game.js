@@ -26,13 +26,27 @@ class AdvancedMathTriviaGame {
 
         this.initializeEventListeners();
         this.loadUserPreferences();
+        // If server provided a session username, use it and make username input readonly
+        if (window.SESSION_USERNAME) {
+            this.currentUser = window.SESSION_USERNAME;
+            const usernameInput = document.getElementById('username');
+            if (usernameInput) {
+                usernameInput.value = this.currentUser;
+                usernameInput.setAttribute('readonly', 'readonly');
+            }
+        }
     }
 
     initializeEventListeners() {
-        document.getElementById('startGame').addEventListener('click', () => this.startGame());
-        document.getElementById('username').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.startGame();
-        });
+        const startBtn = document.getElementById('startGame');
+        if (startBtn) startBtn.addEventListener('click', () => this.startGame());
+
+        const usernameEl = document.getElementById('username');
+        if (usernameEl) {
+            usernameEl.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') this.startGame();
+            });
+        }
 
         document.querySelectorAll('.fruit-option').forEach(option => {
             option.addEventListener('click', (e) => {
@@ -40,11 +54,20 @@ class AdvancedMathTriviaGame {
             });
         });
 
-        document.getElementById('nextQuestion').addEventListener('click', () => this.nextQuestion());
-        document.getElementById('endGame').addEventListener('click', () => this.endGame());
-        document.getElementById('playAgain').addEventListener('click', () => this.playAgain());
-        document.getElementById('exitToMainMenu').addEventListener('click', () => this.exitTOMainMenu());
-        document.getElementById('changeFruit').addEventListener('click', () => this.showFruitModal());
+        const nextBtn = document.getElementById('nextQuestion');
+        if (nextBtn) nextBtn.addEventListener('click', () => this.nextQuestion());
+
+        const endBtn = document.getElementById('endGame');
+        if (endBtn) endBtn.addEventListener('click', () => this.endGame());
+
+        const playAgainBtn = document.getElementById('playAgain');
+        if (playAgainBtn) playAgainBtn.addEventListener('click', () => this.playAgain());
+
+        const exitBtn = document.getElementById('exitToMainMenu');
+        if (exitBtn) exitBtn.addEventListener('click', () => this.exitTOMainMenu());
+
+        const changeFruitBtn = document.getElementById('changeFruit');
+        if (changeFruitBtn) changeFruitBtn.addEventListener('click', () => this.showFruitModal());
 
         document.querySelectorAll('.fruit-option-modal').forEach(option => {
             option.addEventListener('click', (e) => {
@@ -54,12 +77,13 @@ class AdvancedMathTriviaGame {
 
         document.querySelectorAll('.close').forEach(closeBtn => {
             closeBtn.addEventListener('click', (e) => {
-                e.target.closest('.modal').style.display = 'none';
+                const modal = e.target.closest('.modal');
+                if (modal) modal.style.display = 'none';
             });
         });
 
         window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal')) {
+            if (e.target.classList && e.target.classList.contains('modal')) {
                 e.target.style.display = 'none';
             }
         });
@@ -75,9 +99,17 @@ class AdvancedMathTriviaGame {
 
     changeFruitTheme(fruit) {
         this.selectedFruit = fruit;
+        // Sync selection on main page (visible grid)
+        try { this.selectFruit(fruit); } catch (e) {}
+        // Update modal selection visuals
+        document.querySelectorAll('.fruit-option-modal').forEach(o => o.classList.remove('selected'));
+        const modalEl = document.querySelector(`.fruit-option-modal[data-fruit="${fruit}"]`);
+        if (modalEl) modalEl.classList.add('selected');
+
         this.applyFruitTheme();
         this.updateFruitDisplay();
-        document.getElementById('fruitModal').style.display = 'none';
+        const modal = document.getElementById('fruitModal');
+        if (modal) modal.style.display = 'none';
         if (this.gameActive) this.loadQuestion();
     }
 
@@ -93,16 +125,31 @@ class AdvancedMathTriviaGame {
         document.getElementById('currentFruit').textContent = `${fruitTheme.emoji} ${fruitTheme.name} Theme`;
         document.getElementById('resultFruitEmoji').textContent = fruitTheme.emoji;
         document.getElementById('statsFruit').textContent = fruitTheme.name;
+        // Update player emoji(s) if present so UI reflects selected theme
+        const playerEl = document.getElementById('playerEmoji');
+        if (playerEl) playerEl.textContent = fruitTheme.emoji;
+        const playerCompact = document.getElementById('playerEmojiCompact');
+        if (playerCompact) playerCompact.textContent = fruitTheme.emoji;
     }
 
     startGame() {
-        const username = document.getElementById('username').value.trim();
-        if (!username) {
-            alert('Please enter a username!');
-            return;
-        }
+        const username = (document.getElementById('username') || {}).value || '';
+        const usernameTrim = username.trim();
 
-        this.currentUser = username;
+        // If server-side session username exists, disallow starting with a different name
+        if (window.SESSION_USERNAME) {
+            if (usernameTrim !== window.SESSION_USERNAME) {
+                alert(`You are logged in as ${window.SESSION_USERNAME}. You cannot change the username here.`);
+                return;
+            }
+            this.currentUser = window.SESSION_USERNAME;
+        } else {
+            if (!usernameTrim) {
+                alert('Please enter a username!');
+                return;
+            }
+            this.currentUser = usernameTrim;
+        }
         this.score = 0;
         this.questionsAttempted = 0;
         this.correctAnswers = 0;
@@ -275,6 +322,21 @@ class AdvancedMathTriviaGame {
 
     exitTOMainMenu() {
         window.location.href = 'index.php'; 
+    }
+
+    showFruitModal() {
+        const modal = document.getElementById('fruitModal');
+        if (!modal) return;
+        // show modal centered
+        modal.style.display = 'flex';
+
+        // highlight currently selected fruit inside the modal
+        const current = this.selectedFruit || document.querySelector('.fruit-option.selected')?.dataset?.fruit;
+        document.querySelectorAll('.fruit-option-modal').forEach(o => o.classList.remove('selected'));
+        if (current) {
+            const el = document.querySelector(`.fruit-option-modal[data-fruit="${current}"]`);
+            if (el) el.classList.add('selected');
+        }
     }
 
     showResults() {

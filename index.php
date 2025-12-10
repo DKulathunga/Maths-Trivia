@@ -16,6 +16,10 @@ if (!isset($_SESSION['username'])) {
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <script>
+        // expose server session username to client-side
+        window.SESSION_USERNAME = <?php echo json_encode($_SESSION['username'] ?? null); ?>;
+    </script>
     <!-- <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1> -->
     <div class="container">
        
@@ -29,7 +33,11 @@ if (!isset($_SESSION['username'])) {
         <div id="loginScreen" class="screen active">
             <div class="login-form">
                 <h1>🍎 Fruit Math Trivia</h1>
-                <input type="text" id="username" placeholder="Enter your username" maxlength="20">
+                <?php if (isset($_SESSION['username']) && $_SESSION['username']): ?>
+                    <div class="logged-user"><strong>Welcome <?php echo htmlspecialchars($_SESSION['username']); ?> !</strong></div>
+                <?php else: ?>
+                    <input type="text" id="username" placeholder="Enter your username" maxlength="20">
+                <?php endif; ?>
                 
                 <div class="fruit-selection">
                     <h3>Choose Your Favorite Fruit Theme</h3>
@@ -57,32 +65,47 @@ if (!isset($_SESSION['username'])) {
             </div>
         </div>
 
-        <!-- Game Screen -->
+        <!-- Game Screen (single card layout) -->
         <div id="gameScreen" class="screen">
-            <div class="header">
-                <div class="user-info">
-                    <span id="currentUser">User</span>
-                    <span id="currentFruit">🍅 Tomato Theme</span>
-                    <span id="score">Score: 0</span>
-                </div>
-                <div class="header-controls">
-                    <button id="changeFruit" class="change-fruit-btn">Change Fruit</button>
-                    <div class="timer" id="timer">30</div>
-                </div>
-            </div>
+            <div class="single-card">
+                <div class="card-header">
+                    <div class="header-left">
+                        <div class="player-info">
+                            <div class="player-name"><span class="player-label">Player Name :</span> <span id="currentUser">User</span></div>
+                            
+                            <div class="player-score"> <span id="score">0</span></div>
+                            <div class="player-theme"><span class="theme-label">Theme:</span> <span id="currentFruit">Tomato Theme</span></div>
+                        </div>
+                    </div>
 
-            <div class="question-container">
-                <div class="fruit-header">
-                    <span id="fruitEmoji">🍅</span>
-                    <h3 id="fruitTitle">Tomato Math Challenge</h3>
+                    <div class="header-center">
+                        <div class="fruit-header">
+                            <span id="fruitEmoji">🍅</span>
+                            <h3 id="fruitTitle">Tomato Math Challenge</h3>
+                        </div>
+                        <div class="progress" id="progressBar" aria-hidden="true">
+                            <div class="progress-fill" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="header-right">
+                        <div class="timer" id="timer">30</div>
+                        <button id="changeFruit" class="change-fruit-btn small">Change Fr
+                            uit</button>
+                        <button id="endGame" class="danger small">End Game</button>
+                    </div>
                 </div>
-                <div id="questionImage"></div>
+
+                <div class="question-card">
+                    <div id="questionImage" class="question-image"></div>
+                </div>
+
                 <div class="options" id="options"></div>
-            </div>
 
-            <div class="controls">
-                <button id="nextQuestion" style="display:none;">Next Question</button>
-                <button id="endGame">End Game</button>
+                <div class="card-actions">
+                    <button id="nextQuestion" style="display:none;" class="primary small">Next Question</button>
+                </div>
+
             </div>
         </div>
 
